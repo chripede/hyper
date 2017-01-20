@@ -56,18 +56,22 @@ class HTTPConnection(object):
                  ssl_context=None,
                  proxy_host=None,
                  proxy_port=None,
+                 source_address=None,
+                 socket_options=None,
                  **kwargs):
 
         self._host = host
         self._port = port
         self._h1_kwargs = {
             'secure': secure, 'ssl_context': ssl_context,
-            'proxy_host': proxy_host, 'proxy_port': proxy_port
+            'proxy_host': proxy_host, 'proxy_port': proxy_port,
+            'source_address': source_address, 'socket_options': socket_options,
         }
         self._h2_kwargs = {
             'window_manager': window_manager, 'enable_push': enable_push,
             'secure': secure, 'ssl_context': ssl_context,
-            'proxy_host': proxy_host, 'proxy_port': proxy_port
+            'proxy_host': proxy_host, 'proxy_port': proxy_port,
+            'source_address': source_address, 'socket_options': socket_options,
         }
 
         # Add any unexpected kwargs to both dictionaries.

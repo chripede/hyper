@@ -7,7 +7,6 @@ Objects that build hyper's connection-level HTTP/1.1 abstraction.
 """
 import logging
 import os
-import socket
 import base64
 
 from collections import Iterable, Mapping
@@ -15,6 +14,7 @@ from collections import Iterable, Mapping
 import collections
 from hyperframe.frame import SettingsFrame
 
+from hyper.socket_wrapper import create_connection_with_options
 from .response import HTTP11Response
 from ..tls import wrap_socket, H2C_PROTOCOL
 from ..common.bufsocket import BufferedSocket
@@ -60,7 +60,10 @@ class HTTP11Connection(object):
     version = HTTPVersion.http11
 
     def __init__(self, host, port=None, secure=None, ssl_context=None,
-                 proxy_host=None, proxy_port=None, **kwargs):
+                 proxy_host=None, proxy_port=None, source_address=None, socket_options=None,
+                 **kwargs):
+        self.source_address = source_address
+        self.socket_options = socket_options
         if port is None:
             self.host, self.port = to_host_port_tuple(host, default_port=80)
         else:
@@ -119,7 +122,8 @@ class HTTP11Connection(object):
                 host = self.proxy_host
                 port = self.proxy_port
 
-            sock = socket.create_connection((host, port), 5)
+            sock = create_connection_with_options((host, port), 5, source_address=self.source_address,
+                                                  socket_options=self.socket_options)
             proto = None
 
             if self.secure:

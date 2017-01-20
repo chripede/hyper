@@ -9,6 +9,7 @@ import h2.connection
 import h2.events
 import h2.settings
 
+from hyper.socket_wrapper import create_connection_with_options
 from ..compat import ssl
 from ..tls import wrap_socket, H2_NPN_PROTOCOLS, H2C_PROTOCOL
 from ..common.exceptions import ConnectionResetError
@@ -98,10 +99,13 @@ class HTTP20Connection(object):
 
     def __init__(self, host, port=None, secure=None, window_manager=None,
                  enable_push=False, ssl_context=None, proxy_host=None,
-                 proxy_port=None, force_proto=None, **kwargs):
+                 proxy_port=None, force_proto=None, source_address=None,
+                 socket_options=None, **kwargs):
         """
         Creates an HTTP/2 connection to a specific server.
         """
+        self.source_address = source_address
+        self.socket_options = socket_options
         if port is None:
             self.host, self.port = to_host_port_tuple(host, default_port=443)
         else:
@@ -365,7 +369,9 @@ class HTTP20Connection(object):
                 host = self.proxy_host
                 port = self.proxy_port
 
-            sock = socket.create_connection((host, port))
+            sock = create_connection_with_options((host, port),
+                                                  source_address=self.source_address,
+                                                  socket_options=self.socket_options)
 
             if self.secure:
                 assert not self.proxy_host, "Proxy with HTTPS not supported."
