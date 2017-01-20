@@ -100,10 +100,13 @@ class HTTP20Connection(object):
     def __init__(self, host, port=None, secure=None, window_manager=None,
                  enable_push=False, ssl_context=None, proxy_host=None,
                  proxy_port=None, force_proto=None, source_address=None,
-                 socket_options=None, **kwargs):
+                 socket_options=None, socks5_proxy_host=None,
+                 socks5_proxy_port=None, **kwargs):
         """
         Creates an HTTP/2 connection to a specific server.
         """
+        self.socks5_proxy_port = socks5_proxy_port
+        self.socks5_proxy_host = socks5_proxy_host
         self.source_address = source_address
         self.socket_options = socket_options
         if port is None:
@@ -371,7 +374,9 @@ class HTTP20Connection(object):
 
             sock = create_connection_with_options((host, port),
                                                   source_address=self.source_address,
-                                                  socket_options=self.socket_options)
+                                                  socket_options=self.socket_options,
+                                                  socks5_proxy_host=self.socks5_proxy_host,
+                                                  socks5_proxy_port=self.socks5_proxy_port)
 
             if self.secure:
                 assert not self.proxy_host, "Proxy with HTTPS not supported."

@@ -58,6 +58,8 @@ class HTTPConnection(object):
                  proxy_port=None,
                  source_address=None,
                  socket_options=None,
+                 socks5_proxy_host=None,
+                 socks5_proxy_port=None,
                  **kwargs):
 
         self._host = host
@@ -66,12 +68,14 @@ class HTTPConnection(object):
             'secure': secure, 'ssl_context': ssl_context,
             'proxy_host': proxy_host, 'proxy_port': proxy_port,
             'source_address': source_address, 'socket_options': socket_options,
+            'socks5_proxy_host': socks5_proxy_host, 'socks5_proxy_port': socks5_proxy_port,
         }
         self._h2_kwargs = {
             'window_manager': window_manager, 'enable_push': enable_push,
             'secure': secure, 'ssl_context': ssl_context,
             'proxy_host': proxy_host, 'proxy_port': proxy_port,
             'source_address': source_address, 'socket_options': socket_options,
+            'socks5_proxy_host': socks5_proxy_host, 'socks5_proxy_port': socks5_proxy_port,
         }
 
         # Add any unexpected kwargs to both dictionaries.

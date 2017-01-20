@@ -60,8 +60,11 @@ class HTTP11Connection(object):
     version = HTTPVersion.http11
 
     def __init__(self, host, port=None, secure=None, ssl_context=None,
-                 proxy_host=None, proxy_port=None, source_address=None, socket_options=None,
-                 **kwargs):
+                 proxy_host=None, proxy_port=None, source_address=None,
+                 socket_options=None, socks5_proxy_host=None,
+                 socks5_proxy_port=None, **kwargs):
+        self.socks5_proxy_port = socks5_proxy_port
+        self.socks5_proxy_host = socks5_proxy_host
         self.source_address = source_address
         self.socket_options = socket_options
         if port is None:
@@ -122,8 +125,11 @@ class HTTP11Connection(object):
                 host = self.proxy_host
                 port = self.proxy_port
 
-            sock = create_connection_with_options((host, port), 5, source_address=self.source_address,
-                                                  socket_options=self.socket_options)
+            sock = create_connection_with_options((host, port), 5,
+                                                  source_address=self.source_address,
+                                                  socket_options=self.socket_options,
+                                                  socks5_proxy_host=self.socks5_proxy_host,
+                                                  socks5_proxy_port=self.socks5_proxy_port)
             proto = None
 
             if self.secure:

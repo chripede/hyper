@@ -25,10 +25,14 @@ class HTTP20Adapter(HTTPAdapter):
     HTTP/2. This implements some degree of connection pooling to maximise the
     HTTP/2 gain.
     """
-    def __init__(self, source_address=None, socket_options=None, *args, **kwargs):
+    def __init__(self, source_address=None, socket_options=None,
+                 socks5_proxy_host=None, socks5_proxy_port=None,
+                 *args, **kwargs):
         #: A mapping between HTTP netlocs and ``HTTP20Connection`` objects.
         self.source_address = source_address
         self.socket_options = socket_options
+        self.socks5_proxy_host = socks5_proxy_host
+        self.socks5_proxy_port = socks5_proxy_port
         self.connections = {}
 
     def get_connection(self, host, port, scheme, cert=None):
@@ -53,6 +57,8 @@ class HTTP20Adapter(HTTPAdapter):
                 port,
                 source_address=self.source_address,
                 socket_options=self.socket_options,
+                socks5_proxy_host=self.socks5_proxy_host,
+                socks5_proxy_port=self.socks5_proxy_port,
                 secure=secure,
                 ssl_context=ssl_context)
             self.connections[(host, port, scheme, cert, self.source_address)] = conn
