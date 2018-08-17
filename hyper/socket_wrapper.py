@@ -4,7 +4,6 @@ import socks
 
 
 def create_connection_with_options(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
-                                   source_address=None, socket_options=None,
                                    socks5_proxy_host=None, socks5_proxy_port=None):
     host, port = address
     err = None
@@ -18,14 +17,8 @@ def create_connection_with_options(address, timeout=socket._GLOBAL_DEFAULT_TIMEO
             else:
                 sock = socket.socket(af, socktype, proto)
 
-            if socket_options:
-                for opt in socket_options:
-                    sock.setsockopt(*opt)
-
             if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
                 sock.settimeout(timeout)
-            if source_address:
-                sock.bind(source_address)
             sock.connect(sa)
             return sock
 

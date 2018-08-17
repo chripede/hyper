@@ -15,6 +15,7 @@ from collections import Iterable, Mapping
 import collections
 from hyperframe.frame import SettingsFrame
 
+from hyper.socket_wrapper import create_connection_with_options
 from .response import HTTP11Response
 from ..tls import wrap_socket, H2C_PROTOCOL
 from ..common.bufsocket import BufferedSocket

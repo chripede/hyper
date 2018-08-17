@@ -9,6 +9,7 @@ import h2.connection
 import h2.events
 import h2.settings
 
+from hyper.socket_wrapper import create_connection_with_options
 from ..compat import ssl
 from ..tls import wrap_socket, H2_NPN_PROTOCOLS, H2C_PROTOCOL
 from ..common.exceptions import ConnectionResetError
@@ -368,7 +369,7 @@ class HTTP20Connection(object):
                 host = self.proxy_host
                 port = self.proxy_port
 
-            sock = socket.create_connection_with_options((host, port),
+            sock = create_connection_with_options((host, port),
                                                   socks5_proxy_host=self.socks5_proxy_host,
                                                   socks5_proxy_port=self.socks5_proxy_port)
 
